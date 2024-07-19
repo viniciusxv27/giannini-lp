@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/6134d25c78.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3W_PfvndKI-vb4gocgaXew9yoC4hzsfs&callback=initMap&libraries=places,geometry&solution_channel=GMP_QB_locatorplus_v6_cABD" async defer></script>
+    <title>Giannini</title>
+</head>
+<body>
+    <section id="inicio" class="imgbg container-primary">
+        <input class="close-menu" id="close-menu" type="checkbox" role="button" aria-label="close-menu">
+        <label for="close-menu" title="close menu" class="close-menu-label"></label>
+        <aside class="menu">
+            <img alt="Logo da Giannini" src="assets/images/Logo_head.png">
+            <div class="menu-content">
+                <a href="#inicio">INÍCIO</a>
+                <a onclick="verGuitarras()" href="#guitarras">GUITARRAS</a>
+                <a onclick="verBaixos()" href="#baixos">BAIXOS</a>
+                <a href="mailto:mkt@giannini.com.br">CONTATO</a>
+            </div>
+            <a class="menu-button" href="#ondecomprar">ONDE COMPRAR</a>
+        </aside>
+        <img alt="Banner Principal de Guitarra da Giannini" class="primary-banner" src="assets/images/Banner.png">
+        <div class="buttons">
+            <a href="" class="botao">Conheça mais</a>
+            <a  href="#ondecomprar" class="link">Veja onde comprar > </a>
+        </div>
+    </section>
+
+    <section class="container-secondary">
+        <div class="first-carousel-container">
+            <div class="images">
+                <img alt="1ª Imagem da galeria da giannini" src="assets/images/carrocel01.png">
+                <img alt="2ª Imagem da galeria da giannini" src="assets/images/carrocel02.png">
+                <img alt="3ª Imagem da galeria da giannini" src="assets/images/carrocel03.png">
+                <img alt="4ª Imagem da galeria da giannini" src="assets/images/carrocel04.png">
+                <img alt="2ª Imagem da galeria da giannini" src="assets/images/carrocel05.png">
+                <img alt="3ª Imagem da galeria da giannini" src="assets/images/carrocel07.png">
+                <img alt="7ª Imagem da galeria da giannini" src="assets/images/carrocel06.png">
+            </div>
+        </div>
+    </section>
+
+    <section class="container-primary">
+        <div class="options">
+            <button id="guitarrasButton" onclick="verGuitarras()">Guitarras</button>
+            <button id="baixosButton" onclick="verBaixos()">Baixos</button>
+        </div>
+
+        <div id="guitarras" class="guitarras">
+            <div class="div-select">
+                <div class="btns">
+                        <button class="slidi left-caroussel-btn"><</button>
+                        <button class="slidi right-caroussel-btn">></button>
+                </div>
+            </div>
+            <div id="div-img-select" class="div-img-select grid-guitars">
+                <div onclick="guitarra1()" class="img-slide">
+                    <h2>Supersonic GMW33 Pau-Ferro</h2>
+                    <img id="corpoguitarra01" alt="Imagem da Supersonic GMW33 Pau-Ferro da giannini" src="assets/images/Masterwood/Supersonic GMW33 Pau-Ferro/Supersonic GMW33 Pau-Ferro 04.jpg">
+                </div>
+                <div onclick="guitarra2()" class="img-slide">
+                    <h2>Gemini GMW42 Louro-Preto</h2>
+                    <img id="corpoguitarra02" alt="Imagem da Gemini GMW42 Louro-Preto da giannini" src="assets/images/Masterwood/Gemini GMW42 P-90 Louro-Preto/Gemini GMW42 P-90 Louro Preto 03.jpg">
+                </div>
+                <div onclick="guitarra3()" class="img-slide">
+                    <h2>Gemini GMW43 Pau-Ferro</h2>
+                    <img id="corpoguitarra03" alt="Imagem da Gemini GMW43 Pau-Ferro da giannini" src="assets/images/Masterwood/Gemini GMW43 P-90 Pau-Ferro/Gemini GMW43 P-90 Pau Ferro 03.jpg">
+                </div>
+                <div onclick="guitarra4()" class="img-slide">
+                    <h2>Sonic TL GMW23 P-90 Pau-Ferro</h2>
+                    <img id="corpoguitarra04" alt="Imagem da Sonic TL GMW23 P-90 Pau-Ferro da giannini" src="assets/images/Masterwood/Sonic TL GMW23 P-90 Pau-Ferro/Sonic TL GMW23 P-90 Pau_Ferro 03.jpg">
+                </div>
+                <div onclick="guitarra5()" class="img-slide">
+                    <h2>Sonic TL GMW21-P90 Cedro</h2>
+                    <img id="corpoguitarra05" alt="Imagem da Sonic TL GMW21-P90 Cedro da giannini" src="assets/images/Masterwood/Sonic TL GMW21 P-90 Cedro/Sonic TL GMW21 P-90 Cedro 03.jpg">
+                </div>
+                <div onclick="guitarra6()" class="img-slide">
+                    <h2>Sonic TL GMW25-HH Tobacco Sunburst</h2>
+                    <img id="corpoguitarra06" alt="Imagem da Sonic TL GMW25-HH Tobacco Sunburst da giannini" src="assets/images/Masterwood/Sonic TL GMW25 HH Tobacco Sunburst/Sonic TL GMW25 HH Tobacco Sunburst 03.jpg">
+                </div>
+                <div onclick="guitarra7()" class="img-slide">
+                    <h2>Sonic TL GMW23-SS Pau-Ferro</h2>
+                    <img id="corpoguitarra07" alt="Imagem da Sonic TL GMW23-SS Pau-Ferro da giannini" src="assets/images/Masterwood/Sonic TL GMW23 SS Pau-Ferro/Sonic TL GMW23 SS Pau-Ferro 03.jpg">
+                </div>
+                <div onclick="guitarra8()" class="img-slide">
+                    <h2>Sonic ST GMW84-3S 3 Tone Sunburst</h2>
+                    <img id="corpoguitarra08" alt="Imagem da Sonic ST GMW84-3S 3 Tone Sunburst da giannini" src="assets/images/Masterwood/Sonic ST GMW84/Sonic ST GMW84 03.jpg">
+                </div>
+                <div onclick="guitarra9()" class="img-slide">
+                    <h2>Sonic ST GMW83-HSS Pau-Ferro</h2>
+                    <img id="corpoguitarra09" alt="Imagem da Sonic ST GMW83-HSS Pau-Ferro da giannini" src="assets/images/Masterwood/Sonic ST GMW83-HSS/Sonic ST GMW83-HSS 02.jpg">
+                </div>
+            </div>
+            <hr>
+            <div class="info-product">
+                <div id="descricao1">
+                    <h1>Descrição</h1>
+                    <p>Poucas coisas causam tanta ansiedade no mercado de instrumentos musicais quanto o retorno das guitarras Giannini com fabricação nacional – e isso não é modéstia, mas um fato. Tudo jamais poderia ser feito se não tomássemos de antemão os cuidados necessários para apresentar ao público um produto com o esmero que se esperaria de tão aguardada retomada, e que ao mesmo tempo apontasse para o futuro; algo que respeitasse tudo o que já foi construído desde os anos 60 (época de fabricação de nossas primeiras guitarras) e que também trouxesse novidades para quem ansiava não apenas por nostalgia, mas principalmente por qualidade. Pois bem: a linha Giannini Masterwood resgata os formatos clássicos mais característicos da empresa, que tanto marcaram gerações de músicos e/ou entusiastas, e acrescenta a eles complementos modernos de primeira linha, em um conjunto pronto para saciar quem deseja o tradicional, porém definitivamente revitalizado. Mesmo quem tanto esperou se surpreenderá – e eis exatamente nosso objetivo maior.</p>
+                    <hr>
+                    <h1>Especificações</h1>
+                    <div id="especificacoes">
+                        <p>Madeiras:</p>
+                        <br>
+                        <p id="p_title_desc_1"></p>
+                        <br>
+                        <p id="p_desc_1"></p>
+                        <br>
+                        <br>
+                        <p id="p_title_desc_2"></p>
+                        <br>
+                        <p id="p_desc_2"></p>
+                        <br>
+                        <br>
+                        <p id="p_title_desc_3"></p>
+                        <br>
+                        <p id="p_desc_3"></p>
+                        <br>
+                        <br>
+                        <p id="p_cod"></p>
+                        <br>
+                        <p id="p_origem"></p>
+                        <br>
+                        <p id="p_serie"></p>
+                        <br>
+                        <p id="p_cor"></p>
+                        <br>
+                        <p id="p_escudo"></p>
+                        <br>
+                        <p id="p_corpo"></p>
+                        <br>
+                        <p id="p_braco"></p>
+                        <br>
+                        <p id="p_tensor"></p>
+                        <br>
+                        <p id="p_tarraxas"></p>
+                        <br>
+                        <p id="p_escala"></p>
+                        <br>
+                        <p id="p_comprimentodaescala"></p>
+                        <br>
+                        <p id="p_raiodaescala"></p>
+                        <br>
+                        <p id="p_trastes"></p>
+                        <br>
+                        <p id="p_pestana"></p>
+                        <br>
+                        <p id="p_larguradapestana"></p>
+                        <br>
+                        <p id="p_marcacoesdeescala"></p>
+                        <br>
+                        <p id="p_captadores"></p>
+                        <br>
+                        <p id="p_chaveseletora"></p>
+                        <br>
+                        <p id="p_controles"></p>
+                        <br>
+                        <p id="p_ponte"></p>
+                        <br>
+                        <p id="p_acabamento"></p>
+                        <br>
+                        <p id="p_encordoamento"></p>
+                        <br>
+                        <p>Garantia de 01 ano à partir da data na nota fiscal de compra</p>
+                        <br>
+                        <p>*Produto sujeito a alteração sem aviso prévio</p>
+                    </div>
+                </div>
+                <img id="imagemprincipalg" alt="Imagem de Exemplo da Guitarra 360º" src="assets/images/Guitarra_especificacao.png">
+            </div>
+            <div class="galeria">
+                <div class="carousel-container">
+                    <img src="assets/images/Galeria1.jpg" alt="Imagem 1 de Produto">
+                    <img src="assets/images/Galeria2.jpg" alt="Imagem 2 de Produto">
+                    <img src="assets/images/Galeria3.jpg" alt="Imagem 3 de Produto">
+                    <img src="assets/images/Galeria4.jpg" alt="Imagem 4 de Produto">
+                </div>
+                <img class="prev" src="assets/images/arrow.png" alt="Seta para a esquerda">
+                <img class="next" src="assets/images/arrow.png" alt="Seta para a direita">
+            </div>
+        </div>
+
+        <div id="baixos" class="baixos">
+            <div class="div-img-select grid-basses ">
+                <div href="#galeria" onclick="baixo1()">
+                    <h2>Sonic ST Bass GMW83B-4 Pau-Ferro</h2>
+                    <img  id="corpobaixo01" alt="Imagem da Sonic ST Bass GMW83B-4 Pau-Ferro da giannini" src="assets/images/Masterwood/Sonic ST Bass GMW83B-4/Sonic ST Bass GMW83B-4 02.jpg">
+                </div>
+                <div href="#galeria" onclick="baixo2()">
+                    <h2>Sonic ST Bass GMW82B-5 Louro-Preto</h2>
+                    <img  id="corpobaixo02" alt="Imagem da Sonic ST Bass GMW82B-5 Louro-Preto da giannini" src="assets/images/Masterwood/Sonic ST Bass GMW82B-5/Sonic ST Bass GMW82B-5 02.jpg">
+                </div>
+                <div href="#galeria" onclick="baixo3()">
+                    <h2>Sonic ST Bass GMW81B-4</h2>
+                    <img  id="corpobaixo03" alt="Imagem da Sonic ST Bass GMW81B-4 da giannini" src="assets/images/Masterwood/Sonic ST Bass GMW81B-4/Sonic ST Bass GMW81B-4 01.jpg">
+                </div>
+            </div>
+            <hr>
+            <div class="info-product">
+                <div id="descricao2">
+                    <h1>Descrição</h1>
+                    <p>A Giannini possui tradição tamanha no mercado de contrabaixos que muitos colocam nossos produtos dos anos 70 lado a lado com os instrumentos mais celebrados do planeta. Retomar a fabricação nacional requereria uma dose extra de responsabilidade, que lidaria com um legado orgulhosamente distinto – portanto, desde o início nos vimos motivados a entregar ao público não somente algo feito com o esmero necessário a tão aguardado retorno, mas também que mantivesse o olho no futuro; que respeitasse tudo o que foi construído ao longo desses anos, porém que igualmente trouxesse novidades para quem ansiava não apenas por nostalgia, mas principalmente por qualidade. Pois bem: a linha Giannini Masterwood resgata clássicos definitivos da empresa, estes que tanto marcaram gerações de músicos e/ou entusiastas, e acrescenta a eles complementos modernos de primeira linha, em um conjunto pronto para saciar quem deseja o tradicional, porém definitivamente revitalizado. Mesmo quem tanto esperou se surpreenderá – e eis exatamente nosso objetivo maior.</p>
+                    <hr>
+                    <h1>Especificações</h1>
+                    <div id="especificacoes" >
+                        <p>Madeiras:</p>
+                        <br>
+                        <p id="p_title_desc_1_2"></p>
+                        <br>
+                        <p id="p_desc_1_2"></p>
+                        <br>
+                        <br>
+                        <p id="p_title_desc_2_2"></p>
+                        <br>
+                        <p id="p_desc_2_2"></p>
+                        <br>
+                        <br>
+                        <p id="p_title_desc_3_2"></p>
+                        <br>
+                        <p id="p_desc_3_2"></p>
+                        <br>
+                        <br>
+                        <p id="p_cod_2"></p>
+                        <br>
+                        <p id="p_origem_2"></p>
+                        <br>
+                        <p id="p_serie_2"></p>
+                        <br>
+                        <p id="p_cor_2"></p>
+                        <br>
+                        <p id="p_escudo_2"></p>
+                        <br>
+                        <p id="p_corpo_2"></p>
+                        <br>
+                        <p id="p_braco_2"></p>
+                        <br>
+                        <p id="p_tensor_2"></p>
+                        <br>
+                        <p id="p_tarraxas_2"></p>
+                        <br>
+                        <p id="p_escala_2"></p>
+                        <br>
+                        <p id="p_comprimentodaescala_2"></p>
+                        <br>
+                        <p id="p_raiodaescala_2"></p>
+                        <br>
+                        <p id="p_trastes_2"></p>
+                        <br>
+                        <p id="p_pestana_2"></p>
+                        <br>
+                        <p id="p_larguradapestana_2"></p>
+                        <br>
+                        <p id="p_marcacoesdeescala_2"></p>
+                        <br>
+                        <p id="p_captadores_2"></p>
+                        <br>
+                        <p id="p_controles_2"></p>
+                        <br>
+                        <p id="p_ponte_2"></p>
+                        <br>
+                        <p id="p_acabamento_2"></p>
+                        <br>
+                        <p id="p_encordoamento_2"></p>
+                        <br>
+                        <p>Garantia de 01 ano à partir da data na nota fiscal de compra</p>
+                        <br>
+                        <p>*Produto sujeito a alteração sem aviso prévio</p>
+                    </div>
+                </div>
+                <img id="imagemprincipalb" alt="Imagem de Exemplo da Guitarra 360º" src="assets/images/Guitarra_especificacao.png">
+            </div>
+            <div id="galeria" class="galeria">
+                <div class="carousel-container2">
+                    <img id="imgBaixo1" src="assets/images/Galeria1.jpg" alt="Imagem 1 de Baixo">
+                    <img id="imgBaixo2" src="assets/images/Galeria2.jpg" alt="Imagem 2 de Baixo">
+                    <img id="imgBaixo3" src="assets/images/Galeria3.jpg" alt="Imagem 3 de Baixo">
+                    <img id="imgBaixo4" src="assets/images/Galeria4.jpg" alt="Imagem 4 de Baixo">
+                    <img id="imgBaixo5" src="assets/images/Galeria4.jpg" alt="Imagem 5 de Baixo">
+                </div>
+                <img class="prev2" src="assets/images/arrow.png" alt="Seta para a esquerda">
+                <img class="next2" src="assets/images/arrow.png" alt="Seta para a direita">
+            </div>
+        </div>
+    </section>
+
+    <section class="container-banner">
+        <section class="foto">
+            <div class="sobbanner">
+                <h1>Fabricação Nacional</h1>
+                <div class="buttons-banner">
+                    <a href="#ondecomprar" class="botao">ONDE COMPRAR</a>
+                    <a href="mailto:mkt@giannini.com.br" class="link">Entrar em contato > </a>
+                </div>
+            </div>
+            <div class="slides">
+                <input type="radio" name="slide" id="slide1" checked>
+                <input type="radio" name="slide" id="slide2">
+                <input type="radio" name="slide" id="slide3">
+                <div class="slide s1">
+                    <img alt="Banner Guitarra 1 da Giannini" src="assets/images/bannerguitarra.jpg">
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section class="container-secondary">
+        <div class="container-info-product">
+            <h1>O que mudou?</h1>
+            <div class="guitar-info-product">
+                <div>
+                    <button id="mostrarPopup1"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup1" class="popup1">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup1">&times;</span>
+                            <h2>Braço</h2>
+                            <p>Braço com corte radial, para maior firmeza</p>
+                        </div>
+                    </div>
+                    <button id="mostrarPopup2"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup2" class="popup2">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup2">&times;</span>
+                            <h2>Acabamento</h2>
+                            <p>Acabamento Open Pore</p>
+                        </div>
+                    </div>
+                    <button id="mostrarPopup3"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup3" class="popup3">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup3">&times;</span>
+                            <h2>Madeiras</h2>
+                            <p>Madeiras sul-americanas selecionadas</p>
+                        </div>
+                    </div>
+                </div>
+                <img alt="Imagem de exemplo do oque mudou" src="assets/images/Guitarra_especificacao.png">
+                <div>
+                    <button id="mostrarPopup4"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup4" class="popup4">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup4">&times;</span>
+                            <h2>Pestana</h2>
+                            <p>Pestana de 32,8mm, no padrão USA Standard</p>
+                        </div>
+                    </div>
+                    <button id="mostrarPopup5"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup5" class="popup5">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup5">&times;</span>
+                            <h2>Encordoamento</h2>
+                            <p>Encordoamento Giannini GEEGST10 (.010/.052)</p>
+                        </div>
+                    </div>
+                    <button id="mostrarPopup6"><i class="fas fa-plus"></i></button>
+                    <div id="meuPopup6" class="popup6">
+                        <div class="popup-conteudo">
+                            <span class="fechar" id="fecharPopup6">&times;</span>
+                            <h2>Captador</h2>
+                            <p>Captação Wilkinson, customizada pela Giannini</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="width: 90% !important;" class="container-primary">
+
+            <iframe class="video-page" src="https://www.youtube.com/embed/2ELzDL3j3FU" title="Giannini 120 anos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+    </section>
+
+    <section class="container-banner">
+        <section class="foto">
+            <div class="sobbanner">
+                <h1>Baixos</h1>
+                <div class="buttons-banner">
+                    <a href="#ondecomprar" class="botao">ONDE COMPRAR</a>
+                    <a href="mailto:mkt@giannini.com.br" class="link">Entrar em contato > </a>
+                </div>
+            </div>
+            <div class="slides">
+                <input type="radio" name="slide" id="slide1" checked>
+                <input type="radio" name="slide" id="slide2">
+                <input type="radio" name="slide" id="slide3">
+                <div class="slide s1">
+                    <img alt="Banner Baixo 1 da Giannini" src="assets/images/bannerbaixo.jpg">
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="ondecomprar" class="container-primary">
+        <div class="footer">
+            <h1>Onde Comprar?</h1>
+            <div class="footer-map">
+            <iframe src="mapa/index.html"
+              width="100%" height="100%"
+              style="border:0;"
+              loading="lazy">
+            </iframe>
+            </div>
+            <div class="footer-media">
+                <a href="https://www.facebook.com/gianniniinstrumentos"><i class="fab fa-facebook icon-1"></i></a>
+                <a href="https://www.instagram.com/giannini_brasil/"><i class="fab fa-instagram icon-2"></i></a>
+                <a href=""><i class="fab fa-twitter icon-2"></i></a>
+                <a href=""><i class="fab fa-spotify icon-1"></i></a>
+                <a href=""><i class="fab fa-youtube icon-2"></i></a>
+            </div>
+            <hr>
+            <div class="footer-terms">
+                <a target="_blank" href="politicadeprivacidade.pdf">Politica de privacidade</a>
+                <p>|</p>
+                <a target="_blank" href="politicadeprivacidade.pdf">Termos de uso</a>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/javascript/guitarras.js"></script>
+    <script src="assets/javascript/caroussel.js"></script>
+    <script src="assets/javascript/baixos.js"></script>
+    <script src="assets/javascript/script.js"></script>
+</body>
+</html>

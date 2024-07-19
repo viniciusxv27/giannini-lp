@@ -1,0 +1,852 @@
+<!--
+  Copyright 2023 Google LLC
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Locator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+        --gmpx-font-family-base: "Roboto", sans-serif;
+        --gmpx-font-family-headings: "Roboto", sans-serif;
+        --gmpx-color-primary: #39aa40;
+      }
+
+      a {
+        text-decoration: none;
+        color: #39aa40;
+      }
+
+      button {
+        background: none;
+        color: inherit;
+        border: none;
+        padding: 0;
+        font: inherit;
+        font-size: inherit;
+        cursor: pointer;
+      }
+
+      :not(:defined) {
+        visibility: hidden;
+      }
+
+      gmpx-split-layout {
+        --gmpx-fixed-panel-width-row-layout: 25em;
+      }
+
+      #locations-panel {
+        overflow-y: auto;
+        background: white;
+        padding: 0.5em;
+        box-sizing: border-box;
+      }
+
+      #locations-panel-list > header {
+        padding: 1.4em 1.4em 0 1.4em;
+      }
+
+      #locations-panel-list h1.search-title {
+        font-size: 1em;
+        font-weight: 500;
+        margin: 0;
+      }
+
+      #locations-panel-list h1.search-title > img {
+        vertical-align: bottom;
+        margin-top: -1em;
+      }
+
+      #locations-panel-list gmpx-place-picker {
+        width: 100%;
+        margin-top: 0.8em;
+        position: relative;
+      }
+
+      #locations-panel-list .section-name {
+        font-weight: 500;
+        font-size: 0.9em;
+        margin: 1.8em 0 1em 1.5em;
+      }
+
+      #location-results-list .result-item {
+        position: relative;
+        padding: 0.8em 3.5em 0.8em 1.4em;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        cursor: pointer;
+      }
+
+      #location-results-list .result-item:first-of-type {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+      }
+
+      #location-results-list .result-item:last-of-type {
+        border-bottom: none;
+      }
+
+      #location-results-list .selected .result-item {
+        outline: 2px solid #39aa40;
+      }
+
+      #location-results-list h2 {
+        font-size: 1em;
+        font-weight: 500;
+        margin: 0 0 0.6em 0;
+      }
+
+      #location-results-list .address {
+        font-size: 0.9em;
+        margin-bottom: 0.5em;
+      }
+
+      #location-results-list gmpx-place-directions-button {
+        position: absolute;
+        right: 1.2em;
+        top: 2.3em;
+      }
+
+      #location-results-list .distance {
+        position: absolute;
+        top: 0.9em;
+        right: 0;
+        text-align: center;
+        font-size: 0.9em;
+        width: 5em;
+      }
+
+      #location-results-list .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3em;
+        padding-top: 0.3em;
+      }
+
+      #location-results-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #details-panel .back-button {
+        margin: 1em 0 0 1em;
+        font-size: 1em;
+        font-weight: 500;
+        color: #39aa40;
+        display: block;
+      }
+
+      #details-panel .back-button .icon {
+        width: 20px;
+        height: 20px;
+        vertical-align: bottom;
+
+        /* Match link color #1967d2 */
+        filter: invert(30%) sepia(67%) saturate(7379%) hue-rotate(209deg) brightness(95%) contrast(80%);
+      }
+    </style>
+    <script>
+
+      const apiUrl = "https://businesspromo.com.br/giannini/mapa/lojas/";
+
+      let lugares = [];
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          // Suponha que 'data' seja um array de locais em formato JSON
+          // Itere sobre os locais e adicione as informações ao dicionário
+          data.forEach(local => {
+            lugares.push({
+              'title':local.nome,
+              'address1':local.endereco1,
+              'address2':local.endereco2,
+              'coords':{"lat":local.latitude, "lng":local.longitude},
+              'placeId':local.placeid,
+              'products':local.produtos
+            });
+          });
+        })
+        .catch(error => {
+          console.error('Ocorreu um erro ao buscar os locais:', error);
+        });
+
+      let CONFIGURATION = {
+        "locations": lugares,/*[
+          {"title":"Carneiro Instrumentos Musicais","address1":"Av. BNH","address2":"57 - Loja 08 - Parque Res. Laranjeiras - ES, 29165-610, Brasil","coords":{"lat":-20.196064726267956,"lng":-40.25322955397119},"placeId":"ChIJi1oacc4fuAARQUys2Kk-XOo"}
+        ],*/
+        "mapOptions": {"center":{"lat":38.0,"lng":-100.0},"fullscreenControl":true,"mapTypeControl":false,"streetViewControl":false,"zoom":6,"zoomControl":true,"maxZoom":17,"mapId":""},
+        "mapsApiKey": "AIzaSyCEHiOflbYRqwS1fADh-0bAcL-d2-q5drI",
+        "capabilities": {"input":true,"autocomplete":true,"directions":true,"distanceMatrix":true,"details":true,"actions":false}
+      };
+
+    </script>
+    <script type="module">
+      // This loads helper components from the Extended Component Library,
+      // https://github.com/googlemaps/extended-component-library.
+      // Please note unpkg.com is unaffiliated with Google Maps Platform.
+      import {APILoader} from 'https://unpkg.com/@googlemaps/extended-component-library@0.4';
+
+      class LocatorPlus {
+        static REQUIRED_MAPS_JS_LIBRARIES = ['core', 'geometry', 'marker', 'routes'];
+
+        constructor(configuration) {
+          this.locations = configuration.locations || [];
+          this.capabilities = configuration.capabilities || {};
+          this.mapOptions = configuration.mapOptions || {};
+        }
+
+        /** Returns a fully initialized Locator widget. */
+        static async init(configuration) {
+          const locator = new LocatorPlus(configuration);
+
+          await locator.loadMapsLibraries();
+          locator.initializeDOMReferences();
+          locator.initializeMapLocations();
+          locator.initializeSearchInput();
+          locator.initializeDistanceMatrix();
+
+          // Initial render of results
+          locator.renderResultsList();
+
+          return locator;
+        }
+
+        /** Loads resources from the Google Maps JS SDK. */
+        async loadMapsLibraries() {
+          this.mapsLibraries = {};
+          return Promise.all(
+              LocatorPlus.REQUIRED_MAPS_JS_LIBRARIES.map(async (libName) => {
+                this.mapsLibraries[libName] = await APILoader.importLibrary(libName);
+              }));
+        }
+
+        /** Caches references to required DOM elements. */
+        initializeDOMReferences() {
+          this.mapEl = document.querySelector('gmp-map');
+          this.routeEl = document.querySelector('gmp-map > gmpx-route-overview');
+          this.panelEl = document.getElementById('locations-panel');
+          this.sectionNameEl =
+              document.getElementById('location-results-section-name');
+          this.resultItemTemplate =
+              document.getElementById('locator-result-item-template');
+          this.resultsContainerEl = document.getElementById('location-results-list');
+
+          this.overlayLayoutEl = document.querySelector('gmpx-overlay-layout');
+          this.detailsEl =
+              document.querySelector('#details-panel gmpx-place-overview');
+          document.querySelector('#details-panel .back-button')
+              .addEventListener('click', () => this.overlayLayoutEl.hideOverlay());
+        }
+
+        /** Sets one of the locations as "selected". */
+        selectResultItem(locationIdx, panToMarker, scrollToResult) {
+          this.selectedLocationIdx = locationIdx;
+          for (const li of this.resultsContainerEl.children) {
+            li.classList.remove('selected');
+            if (parseInt(li.dataset.locationIndex) === this.selectedLocationIdx) {
+              li.classList.add('selected');
+              if (scrollToResult) {
+                li.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+              }
+            }
+          }
+          if (panToMarker && (locationIdx != null) && !this.searchLocation) {
+            this.map.panTo(this.locations[locationIdx].coords);
+          }
+        }
+
+        /** Updates the map bounds to markers. */
+        updateBounds() {
+          const bounds = new this.mapsLibraries.core.LatLngBounds();
+          if (this.searchLocationMarker) {
+            bounds.extend(this.searchLocationMarker.getPosition());
+          }
+          for (let i = 0; i < this.markers.length; i++) {
+            bounds.extend(this.markers[i].getPosition());
+          }
+          this.map.fitBounds(bounds);
+        }
+
+        /** Initializes the map and markers. */
+        initializeMapLocations() {
+          this.searchLocation = null;
+          this.searchLocationMarker = null;
+          this.selectedLocationIdx = null;
+          this.userCountry = null;
+
+          // Initialize the map.
+          this.map = this.mapEl.innerMap;
+          this.map.setOptions({
+            ...this.mapOptions,
+            mapId: this.mapOptions.mapId || 'DEMO_MAP_ID'
+          });
+
+          // Create a marker for each location.
+          this.markers = this.locations.map((location, index) => {
+            const marker = new this.mapsLibraries.marker.Marker({
+              position: location.coords,
+              map: this.map,
+              title: location.title,
+            });
+            marker.addListener('click', () => {
+              this.selectResultItem(index, false, true);
+            });
+            return marker;
+          });
+
+          // Fit map to marker bounds after initialization.
+          if (this.locations.length) {
+            this.updateBounds();
+          }
+
+          // Create a PlaceResult stub for each location.
+          const LatLng = this.mapsLibraries.core.LatLng;
+          for (const location of this.locations) {
+            location.placeResult = {
+              place_id: location.placeId,
+              name: location.title,
+              formatted_address: location.address1 + ' ' + location.address2,
+              geometry: { location: new LatLng(location.coords) }
+            };
+          }
+        }
+
+        /**
+         * Gets the distance from a store location to the user's location, used in
+         * sorting the list.
+         */
+        getLocationDistance(location) {
+          if (!this.searchLocation) return null;
+
+          // Use travel distance if available (from Distance Matrix).
+          if (location.travelDistanceValue != null) {
+            return location.travelDistanceValue;
+          }
+
+          // Fall back to straight-line distance.
+          return this.mapsLibraries.geometry.spherical.computeDistanceBetween(
+              new this.mapsLibraries.core.LatLng(location.coords),
+              this.searchLocation.location);
+        }
+
+        /**
+         * Creates a DOM Element corresponding to an individual result item.
+         */
+        createResultItem(location) {
+          // Create the parent DOM node.
+          const li =
+              this.resultItemTemplate.content.firstElementChild.cloneNode(true);
+          li.dataset.locationIndex = location.index;
+          if (location.index === this.selectedLocationIdx) {
+            li.classList.add('selected');
+          }
+
+          li.querySelector('gmpx-place-data-provider').place = location.placeResult;
+          li.querySelector('.address')
+              .append(
+                  location.address1, document.createElement('br'), location.address2);
+          li.querySelector('gmpx-place-directions-button').origin =
+              this.searchLocation ? this.searchLocation.location : null;
+          li.querySelector('.distance').textContent = location.travelDistanceText ?? '';
+          const actionsContainer = li.querySelector('.actions');
+          for (const action of location.actions ?? []) {
+            if (action.defaultUrl) {
+              const actionButton = document.createElement('gmpx-icon-button');
+              actionButton.icon = 'open_in_new';
+              actionButton.href = action.defaultUrl;
+              actionButton.textContent = action.label;
+              actionsContainer.append(actionButton);
+            }
+          }
+
+          // Add click event handlers.
+          li.querySelector('.view-details').addEventListener('click', () => {
+            this.showDetails(location.index);
+          });
+
+          const resultSelectionHandler = () => {
+            if (location.index !== this.selectedLocationIdx ||
+                this.updateDirectionsOnSelect) {
+              this.selectResultItem(location.index, true, false);
+              this.updateDirections();
+              this.updateDirectionsOnSelect = false;
+            }
+          };
+
+          // Clicking anywhere on the item selects this location.
+          // Additionally, create a button element to make this behavior
+          // accessible under tab navigation.
+          li.addEventListener('click', resultSelectionHandler);
+          li.querySelector('.select-location').addEventListener('click', (e) => {
+            resultSelectionHandler();
+            e.stopPropagation();
+          });
+
+          return li;
+        }
+
+        /** Renders the list of items next to the map. */
+        renderResultsList() {
+          let locations = this.locations.slice();
+          for (let i = 0; i < locations.length; i++) {
+            locations[i].index = i;
+          }
+          if (this.searchLocation) {
+            this.sectionNameEl.textContent =
+                'Nearest locations (' + locations.length + ')';
+            locations.sort((a, b) => {
+              return this.getLocationDistance(a) - this.getLocationDistance(b);
+            });
+          } else {
+            this.sectionNameEl.textContent = `Todas as Lojas (${locations.length})`;
+          }
+
+          this.resultsContainerEl.replaceChildren(
+              ...locations.map((x) => this.createResultItem(x)));
+        }
+
+        /** Updates the end user's location, used for travel times and sorting. */
+        updateSearchLocation(place) {
+          if (this.searchLocationMarker) {
+            this.searchLocationMarker.setMap(null);
+          }
+          this.searchLocation = place;
+          this.clearDirections();
+          if (!this.searchLocation) {
+            return;
+          }
+          this.searchLocationMarker = new this.mapsLibraries.marker.Marker({
+            position: place.location,
+            map: this.map,
+            title: 'My location',
+            icon: {
+              path: this.mapsLibraries.core.SymbolPath.CIRCLE,
+              scale: 12,
+              fillColor: '#3367D6',
+              fillOpacity: 0.5,
+              strokeOpacity: 0,
+            }
+          });
+
+          // Update the locator's idea of the user's country, used for units. Use
+          // `formatted_address` instead of the more structured `address_components`
+          // to avoid an additional billed call.
+          const addressParts = place.formattedAddress.split(' ');
+          this.userCountry = addressParts[addressParts.length - 1];
+
+          // Update map bounds to include the new location marker.
+          this.updateBounds();
+
+          // Update the result list so we can sort it by proximity.
+          this.renderResultsList();
+
+          this.updateTravelTimes();
+        }
+
+        /** When the search input capability is enabled, initialize it. */
+        initializeSearchInput() {
+          const placePicker = document.querySelector('gmpx-place-picker');
+          placePicker.addEventListener('gmpx-placechange', () => {
+            this.updateSearchLocation(placePicker.value);
+          });
+        }
+
+        /** Initialize Distance Matrix for the locator. */
+        initializeDistanceMatrix() {
+          this.distanceMatrixService =
+              new this.mapsLibraries.routes.DistanceMatrixService();
+        }
+
+        /** Annotate travel times to the selected location using Distance Matrix. */
+        updateTravelTimes() {
+          if (!this.searchLocation) return;
+
+          const units = (this.userCountry === 'USA') ?
+              this.mapsLibraries.core.UnitSystem.IMPERIAL :
+              this.mapsLibraries.core.UnitSystem.METRIC;
+          const request = {
+            origins: [this.searchLocation.location],
+            destinations: this.locations.map((x) => x.coords),
+            travelMode: this.mapsLibraries.routes.TravelMode.DRIVING,
+            unitSystem: units,
+          };
+          const callback = (response, status) => {
+            if (status === 'OK') {
+              const distances = response.rows[0].elements;
+              for (let i = 0; i < distances.length; i++) {
+                const distResult = distances[i];
+                let travelDistanceText, travelDistanceValue;
+                if (distResult.status === 'OK') {
+                  travelDistanceText = distResult.distance.text;
+                  travelDistanceValue = distResult.distance.value;
+                }
+                const location = this.locations[i];
+                location.travelDistanceText = travelDistanceText;
+                location.travelDistanceValue = travelDistanceValue;
+              }
+
+              // Re-render the results list, in case the ordering has changed.
+              this.renderResultsList();
+            }
+          };
+          this.distanceMatrixService.getDistanceMatrix(request, callback);
+        }
+
+        /**
+         * Update directions displayed from the search location to the selected
+         * location on the map.
+         */
+        updateDirections() {
+          if (this.searchLocation && this.selectedLocationIdx != null) {
+            this.routeEl.originLatLng = this.searchLocation.location;
+            this.routeEl.destinationLatLng = this.locations[this.selectedLocationIdx].coords;
+          }
+        }
+
+        /** Removes the directions polyline from the map. */
+        clearDirections() {
+          this.routeEl.originLatLng = undefined;
+          this.routeEl.destinationLatLng = undefined;
+        }
+
+        /** Opens the overlay to show details about a selected location. */
+        showDetails(locationIndex) {
+          const location = this.locations[locationIndex];
+          if (location.placeId) {
+            this.detailsEl.place = location.placeId;
+            this.overlayLayoutEl.showOverlay();
+          }
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => LocatorPlus.init(CONFIGURATION));
+    </script>
+  </head>
+  <body>
+    <!-- Uses the Extended Component Library (https://github.com/googlemaps/extended-component-library)
+         to configure Google Maps Platform APIs. -->
+    <gmpx-api-loader key="AIzaSyCEHiOflbYRqwS1fADh-0bAcL-d2-q5drI" solution-channel="GMP_QB_locatorplus_v8_cABCDE"></gmpx-api-loader>
+
+    <gmpx-split-layout>
+      <gmpx-overlay-layout slot="fixed">
+        <div id="locations-panel" slot="main">
+          <div id="locations-panel-list">
+            <header>
+              <h1 class="search-title">
+                <img src="https://fonts.gstatic.com/s/i/googlematerialicons/place/v15/24px.svg" alt=""/>
+                Procure a loja mais perto
+              </h1>
+              <gmpx-place-picker for-map="main-map" placeholder="Digite seu Endereço" type="geocode">
+              </gmpx-place-picker>
+            </header>
+            <div class="section-name" id="location-results-section-name">
+              Todas as lojas
+            </div>
+            <div style="display: flex; flex-direction: column; justify-content: center; text-align: center; width: 100%;" class="filters">
+
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <select id="category-filter">
+                  <option value="">Todos os Estados</option>
+                </select>
+              </div>
+
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <select id="cidades-filter">
+                  <option value="">Selecione um estado</option>
+                </select>
+              </div>
+
+              <br>
+              <p style="color: #39aa40;">Ou</p>
+              <br>
+              <div style="display: flex; justify-content: center; align-items: center;">
+                <select id="produtos-filter">
+                  <option value="">Selecione um produto</option>
+                  <option value="Supersonic GMW33 Pau-Ferro">Supersonic GMW33 Pau-Ferro</option>
+                  <option value="Gemini GMW42 Louro-Preto">Gemini GMW42 Louro-Preto</option>
+                  <option value="Gemini GMW43 Pau-Ferro">Gemini GMW43 Pau-Ferro</option>
+                  <option value="Sonic TL GMW23 P-90 Pau-Ferro">Sonic TL GMW23 P-90 Pau-Ferro</option>
+                  <option value="Sonic TL GMW21-P90 Cedro">Sonic TL GMW21-P90 Cedro</option>
+                  <option value="Sonic TL GMW25-HH Tobacco Sunburst">Sonic TL GMW25-HH Tobacco Sunburst</option>
+                  <option value="Sonic TL GMW23-SS Pau-Ferro">Sonic TL GMW23-SS Pau-Ferro</option>
+                  <option value="Sonic ST GMW84-3S 3 Tone Sunburst">Sonic ST GMW84-3S 3 Tone Sunburst</option>
+                  <option value="Sonic ST GMW83-HSS Pau-Ferro">Sonic ST GMW83-HSS Pau-Ferro</option>
+                  <option value="Sonic ST Bass GMW83B-4 Pau-Ferro">Sonic ST Bass GMW83B-4 Pau-Ferro</option>
+                  <option value="Sonic ST Bass GMW82B-5 Louro-Preto">Sonic ST Bass GMW82B-5 Louro-Preto</option>
+                  <option value="Sonic ST Bass GMW81B-4">Sonic ST Bass GMW81B-4</option>
+                </select>
+              </div>
+
+              <style>
+
+                select {
+                    background: #fff;
+                    background-position: 205px center;
+                    width: 270px;
+                    height: 48px;
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 18px;
+                    padding: 13px 20px 13px 12px;
+                    color: #39aa40;
+                    text-indent: 0.01px;
+                    text-overflow: "";
+                    cursor: pointer;
+                    margin-bottom: 10px;
+                }
+
+                select::-ms-expand {
+                  display: none;
+                }
+              </style>
+
+              <script>
+                fetch('cidades.json') 
+                  .then(response => response.json())
+                  .then(data => {
+                    const estadosSelect = document.getElementById('category-filter');
+                    const cidadesSelect = document.getElementById('cidades-filter');
+
+                    data.estados.forEach(estado => {
+                      const optionEstado = document.createElement('option');
+                      optionEstado.value = estado.sigla;
+                      optionEstado.textContent = estado.nome;
+                      estadosSelect.appendChild(optionEstado);
+                    });
+
+                    // Defina um evento de mudança no primeiro select para carregar as cidades
+                    estadosSelect.addEventListener('change', () => {
+                      const estadoSelecionado = estadosSelect.value;
+
+                      // Limpe as opções atuais do segundo select
+                      cidadesSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+
+                      // Preencha o segundo select com as cidades do estado selecionado
+                      if (estadoSelecionado) {
+                        const estado = data.estados.find(estado => estado.sigla === estadoSelecionado);
+                        estado.cidades.forEach(cidade => {
+                          const optionCidade = document.createElement('option');
+                          optionCidade.value = cidade;
+                          optionCidade.textContent = cidade;
+                          cidadesSelect.appendChild(optionCidade);
+                        });
+                      }
+                    });
+                  })
+                  .catch(error => {
+                    console.error('Ocorreu um erro ao carregar o arquivo JSON:', error);
+                  });
+
+                
+                const estadosSelect = document.getElementById("category-filter");
+                estadosSelect.addEventListener("change", () => {
+                  const cidadeSelect = document.getElementById("cidade-filter");
+                  const estadoSelecionado = estadosSelect.value;
+
+                  if (estadoSelecionado) {
+                    // Adicione a primeira opção padrão
+                    const defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Selecione uma cidade";
+                    cidadeSelect.appendChild(defaultOption);
+
+                    // Preencha o seletor de cidades com base no estado selecionado
+                    cidadesPorEstado[estadoSelecionado].forEach((cidade) => {
+                      const option = document.createElement("option");
+                      option.value = cidade;
+                      option.textContent = cidade;
+                      cidadeSelect.appendChild(option);
+                    });
+                  } else {
+                    // Se nenhum estado estiver selecionado, exiba uma mensagem padrão
+                    const defaultOption = document.createElement("option");
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Selecione um estado primeiro";
+                    cidadeSelect.appendChild(defaultOption);
+                  }
+                });
+                
+              document.addEventListener('DOMContentLoaded', () => {
+                const categoryFilterSelect = document.getElementById('category-filter');
+                const categoryCidadeFilterSelect = document.getElementById('cidades-filter');
+                const categoryProdutoFilterSelect = document.getElementById('produtos-filter');
+                const applyFiltersButton = document.getElementById('apply-filters');
+                console.log(categoryProdutoFilterSelect.value);
+              
+                applyFiltersButton.addEventListener('click', () => {
+
+                  let filteredLocations; 
+
+                  let valor = categoryCidadeFilterSelect.value;
+
+                  let produtoFiltro = categoryProdutoFilterSelect.value;
+
+                  if(valor == '' && categoryFilterSelect.value == '' && produtoFiltro != ''){
+                    console.log(produtoFiltro)
+                    filteredLocations = lugares.filter((location) => {
+                      location.products = `${location.products}`;
+                      if ((location.products).includes(produtoFiltro)) {
+              
+                        return true;
+                      }
+            
+                      return false;
+                    });
+                  } else if(produtoFiltro == "" && valor != ''){
+                    filteredLocations = lugares.filter((location) => {
+                      if ((location.address2).includes(valor)) {
+                        if((location.address2).includes(categoryFilterSelect.value)){
+                          return true;
+                        }
+                      }
+            
+                      return false;
+                    });
+                  } else{
+                    filteredLocations = lugares.filter((location) => {
+                      if ((location.address2).includes(categoryFilterSelect.value)) {
+                          return true;
+                      }
+            
+                      return false;
+                    });
+                  }
+
+                  renderFilteredResults(filteredLocations);
+                });
+              });
+              
+              // Função para renderizar os resultados filtrados
+              function renderFilteredResults(filteredLocations) {
+                const resultsContainerEl = document.getElementById('location-results-list');
+                resultsContainerEl.innerHTML = ''; // Limpe os resultados existentes
+              
+                // Renderize os resultados filtrados
+                filteredLocations.forEach((location, index) => {
+                  const resultItem = createResultItem(location, index);
+                  resultsContainerEl.appendChild(resultItem);
+                });
+              }
+              
+              function showDetails(locationIndex) {
+                const location = lugares[locationIndex];
+                if (location && location.placeId) {
+                  const detailsEl = document.getElementById('details-panel');
+                  const placeOverview = detailsEl.querySelector('gmpx-place-overview');
+                  placeOverview.place = location.placeId;
+              
+                  const overlayLayout = document.querySelector('gmpx-overlay-layout');
+                  overlayLayout.showOverlay();
+                }
+              }
+              
+              // Função para criar um elemento de resultado individual
+              function createResultItem(location, index) {
+                const li = document.createElement('li');
+                li.dataset.locationIndex = index;
+              
+                const nameElement = document.createElement('h2');
+                nameElement.classList.add('name');
+                nameElement.textContent = location.title;
+              
+                const selectButton = document.createElement('button');
+                selectButton.classList.add('select-location');
+                selectButton.appendChild(nameElement);
+              
+                const addressElement = document.createElement('div');
+                addressElement.classList.add('address');
+                addressElement.textContent = `${location.address1}, ${location.address2}`;
+              
+                const distanceElement = document.createElement('div');
+                distanceElement.classList.add('distance');
+                distanceElement.textContent = location.travelDistanceText || '';
+              
+                const directionsButton = document.createElement('gmpx-place-directions-button');
+                directionsButton.setAttribute('condensed', '');
+              
+                const detailsButton = document.createElement('gmpx-icon-button');
+                detailsButton.classList.add('view-details');
+                detailsButton.textContent = 'Ver Detalhes';
+              
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                resultItem.appendChild(selectButton);
+                resultItem.appendChild(addressElement);
+                resultItem.appendChild(distanceElement);
+                resultItem.appendChild(directionsButton);
+                resultItem.appendChild(detailsButton);
+              
+                li.appendChild(resultItem);
+              
+                // Adicione um ouvinte de evento ao botão "Ver Detalhes" para mostrar os detalhes do local
+                detailsButton.addEventListener('click', () => {
+                  showDetails(index);
+                });
+              
+                return li;
+              }
+              
+              </script>
+              <br>
+              <button style="color: #39aa40; background-color: #fff; padding: 5px; border: 1px solid #39aa40; border-radius: 20px;" id="apply-filters">Aplicar Filtros</button>
+            </div>
+            <div class="results">
+              <ul id="location-results-list"></ul>
+            </div>
+          </div>
+        </div>
+        <div id="details-panel" slot="overlay">
+          <button class="back-button">
+            <img class="icon" src="https://fonts.gstatic.com/s/i/googlematerialicons/arrow_back/v11/24px.svg" alt=""/>
+            Voltar
+          </button>
+          <gmpx-place-overview google-logo-already-displayed></gmpx-place-overview>
+        </div>
+      </gmpx-overlay-layout>
+      <gmp-map slot="main" id="main-map">
+        <gmpx-route-overview no-pin></gmpx-route-overview>
+      </gmp-map>
+    </gmpx-split-layout>
+
+    <template id="locator-result-item-template">
+      <li>
+        <gmpx-place-data-provider auto-fetch-disabled>
+          <div class="result-item">
+            <button class="select-location">
+              <h2 class="name">
+                <gmpx-place-field-text field="displayName"></gmpx-place-field-text>
+              </h2>
+            </button>
+            <div class="address"></div>
+            <div class="actions">
+              <gmpx-icon-button class="view-details">
+                Ver detalhes
+              </gmpx-icon-button>
+            </div>
+            <div class="distance"></div>
+            <gmpx-place-directions-button condensed></gmpx-place-directions-button>
+          </div>
+        </gmpx-place-data-provider>
+      </li>
+    </template>
+  </body>
+</html>
